@@ -7,7 +7,7 @@ import (
 )
 
 type LoadedConf struct {
-	Images []ImgSpecs
+	Images []ImgSpecs `json:"images"`
 }
 
 type ImgSpecs struct {
