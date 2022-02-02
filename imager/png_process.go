@@ -28,7 +28,7 @@ func MergePng(images []image.Image) (*image.RGBA, error) {
 		for y := 0; y < h; y++ {
 			for _, img := range images {
 				oldColor := img.At(x, y)
-				if _, _, _, alpha := oldColor.RGBA(); alpha != 0 {
+				if _, _, _, alpha := oldColor.RGBA(); alpha == 0 {
 					continue
 				}
 				outputImage.Set(x, y, oldColor)
