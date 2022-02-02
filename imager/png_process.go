@@ -65,11 +65,6 @@ func ReplaceHexColors(img image.Image, colorHexBefore, colorHexAfter string) (*i
 	bounds := img.Bounds()
 	outputImage := image.NewRGBA(bounds)
 
-	colorBefore, err := Hex2Color(colorHexBefore)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
 	colorAfter, err := Hex2Color(colorHexAfter)
 	if err != nil {
 		log.Println(err)
@@ -79,10 +74,18 @@ func ReplaceHexColors(img image.Image, colorHexBefore, colorHexAfter string) (*i
 	for x := 0; x < bounds.Max.X; x++ {
 		for y := 0; y < bounds.Max.Y; y++ {
 			currColor := img.At(x, y)
-			if _, _, _, alpha := currColor.RGBA(); alpha != 0 {
+			if _, _, _, alpha := currColor.RGBA(); alpha == 0 {
 				continue
 			}
-			if currColor == colorBefore {
+
+			rCurr, gCurr, bCurr, _ := currColor.RGBA()
+			rBefore, gBefore, bBefore, err := Hex2RGB(colorHexBefore)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			if uint8(rCurr) == rBefore && uint8(gCurr) == gBefore && uint8(bCurr) == bBefore {
 				outputImage.Set(x, y, colorAfter)
 			} else {
 				outputImage.Set(x, y, currColor)
